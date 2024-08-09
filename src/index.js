@@ -1,5 +1,7 @@
 require('dotenv').config();
-const { Client, IntentsBitField, Message, EmbedBuilder } = require('discord.js');
+const { Client, IntentsBitField, Message, EmbedBuilder, ActivityType, Emoji, BaseGuildEmoji } = require('discord.js');
+const eventhandler = require('./handlers/eventhandler.js');
+
 
 const client = new Client({
     intents: [
@@ -24,52 +26,58 @@ function calculateElo(playerARating, playerBRating, result) {
         newBRating: Math.round(newBRating)
     };
 }
+eventhandler(client)
 
+// client.on('ready', (c) => {
+//     console.log(`${c.user.username} is ready`)
 
-client.on('ready', (c) => {
-    console.log(`${c.user.username} is ready`)
-})
+//     client.user.setActivity({
+//         type: ActivityType.Watching,
+//         name: '0 Player in queue'
+//     })
+// })
 
-client.on('messageCreate', async (msg) => {
-    try {
-        if (msg.content === 'hi')
-            msg.reply(`hello ${msg.author.username}`)
-    } catch (error) {
-        console.log(error);
-    }
-})
+// client.on('messageCreate', async (msg) => {
+//     try {
+//         if (msg.content === 'hi')
+//             msg.reply(`hello ${msg.author.username}`)
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })
 
-client.on('interactionCreate', (interaction) => {
-    if (!interaction.isChatInputCommand()) return;
+// client.on('interactionCreate', (interaction) => {
+//     if (!interaction.isChatInputCommand()) return;
 
-    if (interaction.commandName === 'queue') {
-        interaction.reply('you are in the queue')
-    }
-    if (interaction.commandName === 'leave') {
-        interaction.reply('you have left the queue')
-    }
-    if (interaction.commandName === 'add') {
-        const num1 = Number(interaction.options.get('first-number').value)
-        const num2 = Number(interaction.options.get('second-number').value)
-        interaction.reply(`${num1 + num2}`)
-    }
-    if (interaction.commandName === 'embed') {
-        const embed = new EmbedBuilder()
-            .setTitle('this is an embed')
-            .setColor('Green')
-            .setDescription('we sure did make an embed')
+//     if (interaction.commandName === 'queue') {
+//         interaction.reply('you are in the queue')
+//     }
+//     if (interaction.commandName === 'leave') {
+//         interaction.reply('you have left the queue')
+//     }
+//     if (interaction.commandName === 'add') {
+//         const num1 = Number(interaction.options.get('first-number').value)
+//         const num2 = Number(interaction.options.get('second-number').value)
+//         interaction.reply(`${num1 + num2}`)
+//     }
+//     if (interaction.commandName === 'embed') {
+//         const embed = new EmbedBuilder()
+//             .setTitle('this is an embed')
+//             .setColor('Green')
+//             .setDescription('we sure did make an embed')
 
-        interaction.reply({ embeds: [embed] })
-    }
+//         interaction.reply({ embeds: [embed] })
+//     }
 
-    if (interaction.commandName === 'calculate') {
-        const playerAElo = Number(interaction.options.get('player_a').value)
-        const playerBElo = Number(interaction.options.get('player_b').value)
-        const result = Number(interaction.options.get('result').value)
-        const newElos = calculateElo(playerAElo, playerBElo, result)
-        interaction.reply(`Player A: ${newElos.newARating},  Player B: ${newElos.newBRating}`)
-    }
+//     if (interaction.commandName === 'calculate') {
+//         const playerAElo = Number(interaction.options.get('player_a').value)
+//         const playerBElo = Number(interaction.options.get('player_b').value)
+//         const result = Number(interaction.options.get('result').value)
+//         const newElos = calculateElo(playerAElo, playerBElo, result)
+//         interaction.reply(`Player A: ${newElos.newARating},  Player B: ${newElos.newBRating}`)
+//     }
 
-})
+// })
+
 
 client.login(process.env.TOKEN)
